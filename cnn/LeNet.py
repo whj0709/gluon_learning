@@ -25,7 +25,7 @@ def train_lenet():
     print('initialize weight on', ctx)
 
     # 获取数据
-    batch_size = 128
+    batch_size = 256
     train_data, test_data = load_data(DataType.FASHION_MNIST, batch_size)
 
     # 训练
