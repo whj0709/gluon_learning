@@ -238,7 +238,7 @@ def train_cifar10():
     test_dir = 'test'
     input_dir = 'train_valid_test'
     valid_ratio = 0.1
-    # reorg_cifar10_data(data_dir, label_file, train_dir, test_dir, input_dir, valid_ratio)
+    reorg_cifar10_data(data_dir, label_file, train_dir, test_dir, input_dir, valid_ratio)
 
     input_str = os.path.join(data_dir, input_dir)
     batch_size = 128
