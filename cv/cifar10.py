@@ -196,7 +196,7 @@ def evaluate_accuracy(data_iterator, net, ctx=[mx.cpu()]):
         acc.wait_to_read()
     return acc.asscalar() / n
 
-def train(net, train_data, valid_data, num_epochs, batch_size, ctx, trainer, loss_func, lr_period, lr_decay):
+def train(net, train_data, valid_data, num_epochs, batch_size, ctx, trainer, loss_func, lr_period, lr_decay, filename):
     prev_time = datetime.datetime.now()
 
     for epoch in range(num_epochs):
@@ -231,6 +231,8 @@ def train(net, train_data, valid_data, num_epochs, batch_size, ctx, trainer, los
         prev_time = cur_time
         print(epoch_str + time_str + ', lr ' + str(trainer.learning_rate))
 
+        net.save_params(filename)
+
 def train_cifar10():
     data_dir = 'data/'
     label_file = 'trainLabels.csv'
@@ -238,7 +240,7 @@ def train_cifar10():
     test_dir = 'test'
     input_dir = 'train_valid_test'
     valid_ratio = 0.1
-    reorg_cifar10_data(data_dir, label_file, train_dir, test_dir, input_dir, valid_ratio)
+    # reorg_cifar10_data(data_dir, label_file, train_dir, test_dir, input_dir, valid_ratio)
 
     input_str = os.path.join(data_dir, input_dir)
     batch_size = 128
@@ -255,9 +257,10 @@ def train_cifar10():
     lr_period = 80
     lr_decay = 0.1
 
+    filename = "data/mlp.params"
     softmax_cross_entropy = gluon.loss.SoftmaxCrossEntropyLoss()
     trainer = gluon.Trainer(net.collect_params(), 'sgd', {'learning_rate': learning_rate, 'momentum': 0.9, 'wd': weight_decay})
-    train(net, train_data, valid_data, num_epochs, batch_size, ctx, trainer, softmax_cross_entropy, lr_period, lr_decay)
+    train(net, train_data, valid_data, num_epochs, batch_size, ctx, trainer, softmax_cross_entropy, lr_period, lr_decay, filename)
 
 if __name__ == '__main__':
     train_cifar10()
